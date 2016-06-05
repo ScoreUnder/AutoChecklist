@@ -1,3 +1,5 @@
+# Copyright 2016 "Score_Under"; distributed under the terms of the GPLv2 (or
+# later versions, at your option) as published by the Free Software Foundation
 use 5.012;
 use strict;
 use warnings;

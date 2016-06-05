@@ -1,3 +1,5 @@
+# Copyright 2016 "Score_Under"; distributed under the terms of the GPLv2 (or
+# later versions, at your option) as published by the Free Software Foundation
 package AutoChecklist::Item;
 use Carp qw/confess/;
 
