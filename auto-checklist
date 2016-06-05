@@ -1,0 +1,4 @@
+#!/bin/sh
+dir=${0##*/}
+[ "$dir" = "$0" ] && dir=.
+exec perl -I "$dir" -MAutoChecklist::App -e main -- "$@"
