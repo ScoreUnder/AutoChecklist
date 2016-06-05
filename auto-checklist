@@ -1,5 +1,5 @@
 #!/bin/sh
 # This trivial shell script may be used under the CC0 license.
-dir=${0##*/}
+dir=${0%/*}
 [ "$dir" = "$0" ] && dir=.
 exec perl -I "$dir" -MAutoChecklist::App -e main -- "$@"
