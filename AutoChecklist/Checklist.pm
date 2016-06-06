@@ -53,7 +53,7 @@ sub find_new_items {
 
     for (@files) {
         next if $already_have{$_} or /^\./ or $$ignore{"$path/$_"};
-        if (/\n|^ | $/) {
+        if (/\n|^\s|\s$/) {
             warn "Warning: Tricky filename (contains newlines, or has leading/trailing spaces), ignored: $_\n";
             next;
         }

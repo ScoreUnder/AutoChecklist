@@ -66,7 +66,7 @@ sub read_checklist {
                             warn "Warning: Source is not a directory: $source (from $1)\n";
                         } elsif (!-r _) {
                             warn "Warning: Source is not readable: $source (from $1)\n";
-                        } elsif ($source =~ /\n|^ | $/) {
+                        } elsif ($source =~ /\n|^\s|\s$/) {
                             warn "Warning: Tricky dir name (contains newlines, or has leading/trailing spaces), ignored: $source (from $1)\n";
                         } else {
                             push @sources, $source;
