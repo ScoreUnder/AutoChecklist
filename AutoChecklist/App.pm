@@ -43,7 +43,7 @@ sub read_checklist {
 
         # Parse a checklist if something in "x = y:" or "= y:" form is
         # encountered
-        if (/^(?:(.*\S)\s+)? = \s+ (\S+.*): \s*$/x) {
+        if (/^(?:(.*\S)\s+)? = [\t ]+ ([^\t ]+.*): \s*$/x) {
             $parse_state = CHECKLIST;
             $curr_list = AutoChecklist::Checklist->new($2, $1);
             push @checklists, $curr_list;
@@ -51,7 +51,7 @@ sub read_checklist {
         }
 
         # Parse a source name if it begins with "- ".
-        if (/^- \s+ (\S.*?) \s*$/x) {
+        if (/^- [\t ]+ ([^\t ].*?) [\t ]*$/x) {
             if ($parse_state == SOURCES) {
                 push @raw_sources, $1;
                 my @new_sources = glob $1;
@@ -66,7 +66,7 @@ sub read_checklist {
                             warn "Warning: Source is not a directory: $source (from $1)\n";
                         } elsif (!-r _) {
                             warn "Warning: Source is not readable: $source (from $1)\n";
-                        } elsif ($source =~ /\n|^\s|\s$/) {
+                        } elsif ($source =~ /\n|^[\t ]|[\t ]$/) {
                             warn "Warning: Tricky dir name (contains newlines, or has leading/trailing spaces), ignored: $source (from $1)\n";
                         } else {
                             push @sources, $source;
@@ -84,7 +84,7 @@ sub read_checklist {
         }
 
         # Parse a checklist item if it looks like "[???] ???"
-        if (/^\[ ([^\]]+) \] \s+ (\S.*?) \s*$/x) {
+        if (/^\[ ([^\]]+) \] [\t ]+ ([^\t ].*?) [\t ]*$/x) {
             die qq{Found something that looks like a checklist item, }
                .qq{but that is outside of a checklist.\n}
                .qq{Line in question (line $.):\n\t$_\n}
