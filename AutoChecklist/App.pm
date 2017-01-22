@@ -187,12 +187,22 @@ sub check_checklists {
     }
 }
 
+sub list_checklist_items {
+    my $output;
+    my ($checklists,$checklist) = @_;
+    my @matchedLists = grep { ($_->name . ' = ' . $_->path) =~ /$checklist/ } @{$checklists};
+    print_checklists \*STDOUT, @matchedLists;
+}
+
 sub main {
     #die "Need exactly one argument (name of checklist file)" if @ARGV != 1;
     my $listfname;
     my $actionfilename;
+    my $checklistname;
     if ($ARGV[1] eq "-w"){
         $actionfilename = $ARGV[2];
+    } elsif (${ARGV[1]} eq "-l") {
+        $checklistname = $ARGV[2];
     }
     
     $listfname = $ARGV[0];
@@ -203,7 +213,12 @@ sub main {
     find_new_checklists $checklists, $sources, \%existing_checklists;
     split_checklists    $checklists, $ignore,  \%existing_checklists;
     populate_checklists $checklists, $ignore;
+    if (defined$actionfilename){
     check_checklists $checklists, $actionfilename;
+    }
+    if (defined$checklistname){
+        list_checklist_items $checklists, $checklistname;
+    }
 
     # Output checklists again
     open my $outfile, '>', $listfname
