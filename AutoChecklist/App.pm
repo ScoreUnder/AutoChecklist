@@ -168,17 +168,42 @@ sub print_checklists {
     }
 }
 
+sub check_checklists {
+    my ($checklists, $pathregex) = @_;
+    my @matches = grep { $_->path =~ /$pathregex/ } map { @{$_->items} } @{$checklists};
+    if (@matches == 1) {
+        my ($item) = @matches;
+        printf "Toggling watched state of [%s] %s\n", $item->check, $item->path;
+        if ($item->check eq 'X') {
+            $item->check = ' ';
+        } else {
+            if ($item->check ne ' ') {
+                printf STDERR "Warning: check mark used to be '%s'\n", $item->check;
+            }
+            $item->check = 'X';
+        }
+    } else {
+        printf "Warning: tried to set more than 1 item watched!\n";
+    }
+}
+
 sub main {
-    die "Need exactly one argument (name of checklist file)" if @ARGV != 1;
-    my $listfname = $ARGV[0];
-
+    #die "Need exactly one argument (name of checklist file)" if @ARGV != 1;
+    my $listfname;
+    my $actionfilename;
+    if ($ARGV[1] eq "-w"){
+        $actionfilename = $ARGV[2];
+    }
+    
+    $listfname = $ARGV[0];
     my ($checklists, $sources, $raw_sources, $ignore) = read_checklist $listfname;
-
+    
     # Modify checklists as appropriate
     my %existing_checklists = map {$_->path => 1} @{$checklists};
     find_new_checklists $checklists, $sources, \%existing_checklists;
     split_checklists    $checklists, $ignore,  \%existing_checklists;
     populate_checklists $checklists, $ignore;
+    check_checklists $checklists, $actionfilename;
 
     # Output checklists again
     open my $outfile, '>', $listfname

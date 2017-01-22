@@ -8,7 +8,7 @@ sub new {
     confess 'Wrong number of args' if @_ != 3 and @_ != 2;
     bless([$check // ' ', $path], $class)
 }
-sub check() { $_[0][0] }
+sub check() :lvalue { $_[0][0] }
 sub path()  { $_[0][1] }
 
 1;
