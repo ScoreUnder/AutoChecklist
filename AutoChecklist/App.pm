@@ -233,6 +233,7 @@ sub main {
     split_checklists     $checklists, $ignore,  \%existing_checklists;
     populate_checklists  $checklists, $ignore;
 
+    # Carry out command-line actions
     check_checklists     $checklists, $_ for @items_to_check;
     list_checklist_items $checklists, $_ for @lists_to_show;
 
