@@ -184,8 +184,10 @@ sub check_checklists {
             }
             $item->check = 'X';
         }
+    } elsif (@matches > 1) {
+        printf STDERR "Warning: tried to set more than 1 item watched! (pattern '%s')\n", $pathregex;
     } else {
-        printf "Warning: tried to set more than 1 item watched!\n";
+        printf STDERR "Warning: no matches for pattern '%s'\n", $pathregex;
     }
 }
 
