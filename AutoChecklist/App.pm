@@ -215,11 +215,11 @@ sub usage {
 }
 
 sub main {
-    my ($listfname, $actionfilename, $checklistname);
+    my ($listfname, @actionfilename, @checklistname);
 
     GetOptions(
-        'watched|check|w=s' => \$actionfilename,
-        'list|l=s' => \$checklistname,
+        'watched|check|w=s' => \@actionfilename,
+        'list|l=s' => \@checklistname,
         'help|h' => sub { usage \*STDERR; exit 0; },
     ) or die "Bad command-line arguments. See --help.\n";
     die "Need exactly one non-option argument (name of checklist file). See --help.\n" if @ARGV != 1;
@@ -229,15 +229,12 @@ sub main {
 
     # Modify checklists as appropriate
     my %existing_checklists = map {$_->path => 1} @{$checklists};
-    find_new_checklists $checklists, $sources, \%existing_checklists;
-    split_checklists    $checklists, $ignore,  \%existing_checklists;
-    populate_checklists $checklists, $ignore;
-    if (defined $actionfilename) {
-        check_checklists $checklists, $actionfilename;
-    }
-    if (defined $checklistname) {
-        list_checklist_items $checklists, $checklistname;
-    }
+    find_new_checklists  $checklists, $sources, \%existing_checklists;
+    split_checklists     $checklists, $ignore,  \%existing_checklists;
+    populate_checklists  $checklists, $ignore;
+
+    check_checklists     $checklists, $_ for @actionfilename;
+    list_checklist_items $checklists, $_ for @checklistname;
 
     # Output checklists again
     open my $outfile, '>', $listfname
