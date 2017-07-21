@@ -215,11 +215,11 @@ sub usage {
 }
 
 sub main {
-    my ($listfname, @actionfilename, @checklistname);
+    my ($listfname, @items_to_check, @lists_to_show);
 
     GetOptions(
-        'watched|check|w=s' => \@actionfilename,
-        'list|l=s' => \@checklistname,
+        'watched|check|w=s' => \@items_to_check,
+        'list|l=s' => \@lists_to_show,
         'help|h' => sub { usage \*STDERR; exit 0; },
     ) or die "Bad command-line arguments. See --help.\n";
     die "Need exactly one non-option argument (name of checklist file). See --help.\n" if @ARGV != 1;
@@ -233,8 +233,8 @@ sub main {
     split_checklists     $checklists, $ignore,  \%existing_checklists;
     populate_checklists  $checklists, $ignore;
 
-    check_checklists     $checklists, $_ for @actionfilename;
-    list_checklist_items $checklists, $_ for @checklistname;
+    check_checklists     $checklists, $_ for @items_to_check;
+    list_checklist_items $checklists, $_ for @lists_to_show;
 
     # Output checklists again
     open my $outfile, '>', $listfname
