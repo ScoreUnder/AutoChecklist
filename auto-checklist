@@ -1,5 +1,11 @@
-#!/bin/sh
-# This trivial shell script may be used under the CC0 license.
-dir=${0%/*}
-[ "$dir" = "$0" ] && dir=.
-exec perl -I "$dir" -MAutoChecklist::App -e main -- "$@"
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+BEGIN {
+    use File::Basename 'dirname';
+    unshift @INC, dirname $0;
+}
+
+use AutoChecklist::App;
+main

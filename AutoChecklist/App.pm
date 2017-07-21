@@ -5,6 +5,8 @@ use strict;
 use warnings;
 
 use Carp qw/confess/;
+use File::Basename 'basename';
+use Getopt::Long 'GetOptions';
 
 use AutoChecklist::Checklist ();
 use AutoChecklist::Item ();
@@ -194,16 +196,31 @@ sub list_checklist_items {
     print_checklists \*STDOUT, @matchedLists;
 }
 
+sub usage {
+    my ($out_fd) = @_;
+    my $progname = basename $0;
+    print $out_fd qq{\
+        ;Usage: $progname [OPTIONS] FILENAME
+        ;
+        ;Updates the checklist stored in FILENAME, and optionally performs other actions
+        ;according to OPTIONS.
+        ;
+        ;OPTIONS:
+        ;  --watched | --check |
+        ;  -w PATTERN           Check or uncheck an item matching PATTERN.
+        ;  --list | -l PATTERN  List all items in the checklist matching PATTERN.
+    } =~ s/^[^;]*;//rgm =~ s/ *$//r;
+}
+
 sub main {
-    #die "Need exactly one argument (name of checklist file)" if @ARGV != 1;
-    my $listfname;
-    my $actionfilename;
-    my $checklistname;
-    if ($ARGV[1] eq "-w"){
-        $actionfilename = $ARGV[2];
-    } elsif ($ARGV[1] eq "-l") {
-        $checklistname = $ARGV[2];
-    }
+    my ($listfname, $actionfilename, $checklistname);
+
+    GetOptions(
+        'watched|check|w=s' => \$actionfilename,
+        'list|l=s' => \$checklistname,
+        'help|h' => sub { usage \*STDERR; exit 0; },
+    ) or die "Bad command-line arguments. See --help.\n";
+    die "Need exactly one non-option argument (name of checklist file). See --help.\n" if @ARGV != 1;
 
     $listfname = $ARGV[0];
     my ($checklists, $sources, $raw_sources, $ignore) = read_checklist $listfname;
