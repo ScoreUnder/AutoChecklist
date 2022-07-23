@@ -12,10 +12,16 @@ the filesystem when you run this script.
 Usage
 -----
 
+The general usage of this program follows this pattern:
 ```
 auto-checklist filename.txt
 ```
 Nothing more to it.
+
+There are some command-line options described in
+`auto-checklist --help`, but those are not necessary for normal
+operation of this program and exist as shortcuts for operations you
+could do yourself with a text editor.
 
 File format
 -----------
