@@ -192,7 +192,6 @@ sub check_checklists {
 }
 
 sub list_checklist_items {
-    my $output;
     my ($checklists,$checklist) = @_;
     my @matchedLists = grep { ($_->name . ' = ' . $_->path) =~ /$checklist/ } @{$checklists};
     print_checklists \*STDOUT, @matchedLists;
