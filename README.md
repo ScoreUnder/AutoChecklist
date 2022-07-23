@@ -91,7 +91,7 @@ items.
 
 #### Check-marks
 
-There are two kinds of special check-mark (case insensitive):
+There are three kinds of special check-mark (case insensitive):
 
 * `I`: Ignore the filename in future runs, and delete from this
   checklist as soon as possible. Mnemonic: "Ignore".
@@ -99,6 +99,9 @@ There are two kinds of special check-mark (case insensitive):
   soon as possible, and create an entirely new checklist from this
   filename. Only really makes sense for directories. Mnemonic: "Split",
   "Search", or "Subdirectory".
+* `M`: The file no longer exists. This does not have any special meaning
+  to the program itself, but empty checkmarks will be overwritten with
+  this if the file has gone away. Mnemonic: "Missing".
 
 It is not guaranteed that these will be the only special kinds of
 check-marks. Since this script is mostly personal to me, I don't feel

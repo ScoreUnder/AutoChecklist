@@ -136,7 +136,8 @@ sub populate_checklists {
     for my $checklist (@$checklists) {
         $$ignore{$checklist->path.'/'.$_->path} = 1 for $checklist->remove_checks('i');
         eval {
-            $checklist->find_new_items($ignore);
+            my %existing = $checklist->find_new_items($ignore);
+            $checklist->mark_missing_items(%existing);
         };
         if ($@) {
             warn $@;

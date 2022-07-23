@@ -42,6 +42,8 @@ sub find_new_items {
     my ($self, $ignore) = @_;
     confess 'Wrong number of args' if @_ != 2;
 
+    my %existing;
+
     my %already_have = map {$_->path => 1} @{$self->items};
 
     my $path = $self->path;
@@ -52,6 +54,7 @@ sub find_new_items {
     @files = sort @files;
 
     for (@files) {
+        $existing{$_} = 1;
         next if $already_have{$_} or /^\./ or $$ignore{"$path/$_"};
         if (/\n|^[\t ]|[\t ]$/) {
             warn "Warning: Tricky filename (contains newlines, or has leading/trailing spaces), ignored: $_\n";
@@ -59,6 +62,18 @@ sub find_new_items {
         }
         $self->add(AutoChecklist::Item->new($_));
     }
+
+    %existing;
+}
+
+sub mark_missing_items {
+    my ($self, %existing) = @_;
+    confess 'Wrong number of args' if @_ < 1;
+
+    # Mark missing files, if they don't already have a mark
+    $_->check = 'M' for grep {
+        $_->check eq ' ' && !$existing{$_->path}
+    } @{$self->items};
 }
 
 1;
